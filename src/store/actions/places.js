@@ -6,7 +6,10 @@ export const addPlace = (title, image) => {
     type: ADD_PLACE,
     placeData: {
       title,
-      image
+      image: {
+        uri: image.imageUri,
+        path: image.imagePath
+      }
     }
   }
 }

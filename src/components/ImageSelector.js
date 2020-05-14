@@ -13,22 +13,18 @@ const ImageSelector = ({ onImageTaken }) => {
   const [imageSource, setImageSource] = useState({ uri: '' });
 
   const options = {
-    title: 'Select Avatar',
     quality: 0.7,
+    noData: true,
     storageOptions: {
       skipBackup: true,
       path: 'images',
     },
-    permissionDenied: {
-      title: "Perm denied error",
-      text: 'To be able to take pictures you need to provide a permissions'
-    }
   };
 
   const takeImageHandler = () => {
     ImagePicker.launchCamera(options, (response) => {
       setImageSource({ uri: response.uri });
-      onImageTaken(response.uri);
+      onImageTaken(response.uri, response.path);
     })
   }
 

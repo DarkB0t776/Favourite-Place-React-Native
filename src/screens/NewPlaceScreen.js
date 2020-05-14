@@ -21,7 +21,7 @@ import ImageSelector from '../components/ImageSelector';
 const NewPlaceScreen = ({ navigation }) => {
 
   const [titleValue, setTitleValue] = useState('');
-  const [selectedImage, setSelectedImage] = useState();
+  const [selectedImage, setSelectedImage] = useState({ imageUri: '', imagePath: '' });
   const dispatch = useDispatch();
 
   const titleChangeHandler = text => {
@@ -33,8 +33,8 @@ const NewPlaceScreen = ({ navigation }) => {
     navigation.goBack();
   };
 
-  const imageTakenHandler = imagePath => {
-    setSelectedImage(imagePath);
+  const imageTakenHandler = (imageUri, imagePath) => {
+    setSelectedImage({ imageUri, imagePath });
   }
 
   useLayoutEffect(() => {
