@@ -2,14 +2,17 @@
 import React, { useLayoutEffect } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-const PlaceDetailScreen = () => {
+const PlaceDetailScreen = ({ navigation, route }) => {
+
+  const placeTitle = route.params?.placeTitle;
+  const placeId = route.params?.placeId;
 
   // Header Options
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitle: "Place Detail"
+      headerTitle: placeTitle
     });
-  }, []);
+  }, [placeTitle]);
 
   return (
     <View>

@@ -15,9 +15,13 @@ import * as placesActions from '../store/actions/places';
 // Constants
 import Colors from '../constants/Colors';
 
+// Components
+import ImageSelector from '../components/ImageSelector';
+
 const NewPlaceScreen = ({ navigation }) => {
 
   const [titleValue, setTitleValue] = useState('');
+  const [selectedImage, setSelectedImage] = useState();
   const dispatch = useDispatch();
 
   const titleChangeHandler = text => {
@@ -25,9 +29,13 @@ const NewPlaceScreen = ({ navigation }) => {
   };
 
   const savePlaceHandler = () => {
-    dispatch(placesActions.addPlace(titleValue));
+    dispatch(placesActions.addPlace(titleValue, selectedImage));
     navigation.goBack();
   };
+
+  const imageTakenHandler = imagePath => {
+    setSelectedImage(imagePath);
+  }
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -43,6 +51,9 @@ const NewPlaceScreen = ({ navigation }) => {
           style={styles.textInput}
           onChangeText={titleChangeHandler}
           value={titleValue}
+        />
+        <ImageSelector
+          onImageTaken={imageTakenHandler}
         />
         <Button
           title="Save Place"
