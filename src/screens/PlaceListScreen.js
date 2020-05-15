@@ -2,6 +2,7 @@ import React, { useLayoutEffect } from 'react';
 import { StyleSheet, FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
 
+
 // Component
 import HeaderButton from '../components/HeaderButton';
 import PlaceItem from '../components/PlaceItem';
