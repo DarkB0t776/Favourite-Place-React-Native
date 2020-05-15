@@ -1,6 +1,7 @@
 // Core
 import React, { useState } from 'react'
 import { StyleSheet, Text, View, Button, ActivityIndicator, Alert } from 'react-native'
+import { useNavigation } from '@react-navigation/native';
 
 // Constants
 import Colors from '../constants/Colors';
@@ -14,6 +15,7 @@ const LocationPicker = () => {
   const [isFetching, setIsFetching] = useState(false);
   const [permissions, setPermissions] = useState(false);
   const [location, setLocation] = useState();
+  const navigation = useNavigation();
 
   const getLocationHandler = async () => {
 
@@ -43,11 +45,19 @@ const LocationPicker = () => {
     }
   }
 
+  const pickOnMapHandler = () => {
+    navigation.navigate('Map');
+  };
+
 
 
   return (
     <View style={styles.locationPicker}>
-      <MapPreview style={styles.mapPreview} location={location}>
+      <MapPreview
+        style={styles.mapPreview}
+        location={location}
+        onPress={pickOnMapHandler}
+      >
         <View>
           {
             isFetching
@@ -58,11 +68,18 @@ const LocationPicker = () => {
           }
         </View>
       </MapPreview>
-      <Button
-        title="Get User Location"
-        color={Colors.primary}
-        onPress={getLocationHandler}
-      />
+      <View style={styles.actions}>
+        <Button
+          title="Get User Location"
+          color={Colors.primary}
+          onPress={getLocationHandler}
+        />
+        <Button
+          title="Pick on Map"
+          color={Colors.primary}
+          onPress={pickOnMapHandler}
+        />
+      </View>
     </View>
   )
 }
@@ -79,5 +96,10 @@ const styles = StyleSheet.create({
     height: 150,
     borderColor: '#ccc',
     borderWidth: 1
+  },
+  actions: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%'
   }
 })
