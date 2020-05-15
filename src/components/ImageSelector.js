@@ -10,7 +10,8 @@ import ImagePicker from 'react-native-image-picker';
 
 const ImageSelector = ({ onImageTaken }) => {
 
-  const [imageSource, setImageSource] = useState({ uri: '' });
+  const [imageSource, setImageSource] = useState('');
+
 
   const options = {
     quality: 0.7,
@@ -23,8 +24,8 @@ const ImageSelector = ({ onImageTaken }) => {
 
   const takeImageHandler = () => {
     ImagePicker.launchCamera(options, (response) => {
-      setImageSource({ uri: response.uri });
-      onImageTaken(response.uri, response.path);
+      setImageSource(response.uri);
+      onImageTaken(response.path);
     })
   }
 
@@ -32,13 +33,13 @@ const ImageSelector = ({ onImageTaken }) => {
     <View style={styles.imageSelector}>
       <View style={styles.imagePreview}>
         {
-          !imageSource.uri
+          !imageSource
             ?
             <Text>No image picked yet.</Text>
             :
             <Image
               style={styles.image}
-              source={imageSource}
+              source={{ uri: imageSource }}
             />
         }
       </View>

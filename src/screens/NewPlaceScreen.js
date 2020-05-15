@@ -17,11 +17,15 @@ import Colors from '../constants/Colors';
 
 // Components
 import ImageSelector from '../components/ImageSelector';
+import LocationPicker from '../components/LocationPicker';
+
+// Other
+
 
 const NewPlaceScreen = ({ navigation }) => {
 
   const [titleValue, setTitleValue] = useState('');
-  const [selectedImage, setSelectedImage] = useState({ imageUri: '', imagePath: '' });
+  const [selectedImage, setSelectedImage] = useState({ imagePath: '' });
   const dispatch = useDispatch();
 
   const titleChangeHandler = text => {
@@ -33,8 +37,8 @@ const NewPlaceScreen = ({ navigation }) => {
     navigation.goBack();
   };
 
-  const imageTakenHandler = (imageUri, imagePath) => {
-    setSelectedImage({ imageUri, imagePath });
+  const imageTakenHandler = (imagePath) => {
+    setSelectedImage({ imagePath });
   }
 
   useLayoutEffect(() => {
@@ -55,6 +59,7 @@ const NewPlaceScreen = ({ navigation }) => {
         <ImageSelector
           onImageTaken={imageTakenHandler}
         />
+        <LocationPicker />
         <Button
           title="Save Place"
           color={Colors.primary}

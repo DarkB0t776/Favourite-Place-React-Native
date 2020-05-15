@@ -1,6 +1,9 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useLayoutEffect, useEffect } from 'react';
 import { StyleSheet, FlatList } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+
+// Actions
+import * as placesActions from '../store/actions/places';
 
 
 // Component
@@ -13,6 +16,11 @@ import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 const PlaceListScreen = ({ navigation }) => {
 
   const places = useSelector(state => state.places.places);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(placesActions.loadPlaces());
+  }, []);
 
   // Header Options
   useLayoutEffect(() => {
