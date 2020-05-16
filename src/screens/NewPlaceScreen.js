@@ -1,11 +1,12 @@
-import React, { useLayoutEffect, useState, useCallback } from 'react';
+import React, { useLayoutEffect, useEffect, useState, useCallback } from 'react';
 import {
   StyleSheet,
   Text,
   View,
   TextInput,
   ScrollView,
-  Button
+  Button,
+  Alert
 } from 'react-native';
 import { useDispatch } from 'react-redux';
 
@@ -24,6 +25,7 @@ import LocationPicker from '../components/LocationPicker';
 
 const NewPlaceScreen = ({ navigation }) => {
 
+  const [titleValid, setTitleValid] = useState(false);
   const [titleValue, setTitleValue] = useState('');
   const [selectedImage, setSelectedImage] = useState({ imagePath: '' });
   const [selectedLocation, setSelectedLocation] = useState();
@@ -34,6 +36,12 @@ const NewPlaceScreen = ({ navigation }) => {
   };
 
   const savePlaceHandler = () => {
+    if (!titleValid) {
+      Alert.alert('Warning', 'Please check errors', [
+        { text: 'Okay' }
+      ]);
+      return;
+    }
     dispatch(placesActions.addPlace(titleValue, selectedImage, selectedLocation));
     navigation.goBack();
   };
@@ -45,6 +53,19 @@ const NewPlaceScreen = ({ navigation }) => {
   const locationPickedHandler = useCallback(location => {
     setSelectedLocation(location);
   }, []);
+
+  const validateTitle = useCallback((title) => {
+    if (title.length > 1) {
+      setTitleValid(true);
+    } else {
+      setTitleValid(false);
+    }
+  }, [titleValue]);
+
+
+  useEffect(() => {
+    validateTitle(titleValue);
+  }, [titleValue]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -61,6 +82,9 @@ const NewPlaceScreen = ({ navigation }) => {
           onChangeText={titleChangeHandler}
           value={titleValue}
         />
+        {
+          !titleValid && <Text style={styles.error}>You must provide a title</Text>
+        }
         <ImageSelector
           onImageTaken={imageTakenHandler}
         />
@@ -90,8 +114,12 @@ const styles = StyleSheet.create({
   textInput: {
     borderBottomColor: '#ccc',
     borderBottomWidth: 1,
-    marginBottom: 15,
+    marginBottom: 5,
     paddingVertical: 4,
     paddingHorizontal: 2
+  },
+  error: {
+    color: 'red',
+    marginBottom: 10
   }
 })
