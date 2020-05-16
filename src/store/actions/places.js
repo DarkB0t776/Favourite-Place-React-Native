@@ -1,8 +1,9 @@
 // Types
-import { ADD_PLACE, FETCH_PLACES } from '../types'
+import { ADD_PLACE, FETCH_PLACES, DELETE_PLACE } from '../types';
 
 // Other
-import { insertPlace, fetchPlaces } from '../../database/db';
+import { insertPlace, fetchPlaces, deletePlace } from '../../database/db';
+import RNFetchBlob from 'react-native-fetch-blob'
 
 export const addPlace = (title, image, location) => {
 
@@ -38,5 +39,17 @@ export const loadPlaces = () => {
     } catch (err) {
       throw err;
     }
+  }
+}
+
+export const removePlace = (id, imagePath) => {
+  return async dispatch => {
+    const deleteResult = await RNFetchBlob.fs.unlink(imagePath);
+    console.log('deleted', deleteResult);
+    const result = await deletePlace(id);
+    dispatch({
+      type: DELETE_PLACE,
+      placeId: id
+    })
   }
 }

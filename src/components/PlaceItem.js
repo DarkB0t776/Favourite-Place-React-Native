@@ -1,21 +1,40 @@
 // Core
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { useDispatch } from 'react-redux';
+import * as placesActions from '../store/actions/places';
 
 // Constants
 import Colors from '../constants/Colors';
 
+// Other
+import Icon from 'react-native-vector-icons/Ionicons';
+
 const PlaceItem = props => {
 
-  let image = `file://${props.image}`;
+  const dispatch = useDispatch();
+
+  const image = `file://${props.image}`;
+  const id = props.id;
+
+  const onDeleteHandler = (imageId, imagePath) => {
+    Alert.alert('Delete item', 'Are you sure?', [
+      { text: 'Yes', onPress: () => dispatch(placesActions.removePlace(imageId, imagePath)) },
+      { text: 'No' }
+    ])
+  }
+
 
   return (
-    <TouchableOpacity onPress={props.onSelect} style={styles.placeItem}>
-      <Image style={styles.image} source={{ uri: image }} />
-      <View style={styles.infoContainer}>
+    <View style={styles.placeItem}>
+      <TouchableOpacity onPress={props.onSelect} style={styles.infoContainer}>
+        <Image style={styles.image} source={{ uri: image }} />
         <Text style={styles.title}>{props.title}</Text>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => onDeleteHandler(id, props.image)}>
+        <Icon name="md-trash" size={25} color="black" />
+      </TouchableOpacity>
+    </View>
   );
 };
 
@@ -29,6 +48,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 30,
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center'
   },
   image: {
@@ -40,18 +60,20 @@ const styles = StyleSheet.create({
     borderWidth: 1
   },
   infoContainer: {
-    marginLeft: 25,
-    width: 250,
-    justifyContent: 'center',
-    alignItems: 'flex-start'
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '50%'
   },
   title: {
     color: 'black',
     fontSize: 18,
     marginBottom: 5
   },
-  address: {
-    color: '#666',
-    fontSize: 16
+  icon: {
+    borderWidth: 1,
+    borderColor: 2,
+    width: 20,
+    height: 20
   }
 });

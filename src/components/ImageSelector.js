@@ -1,5 +1,5 @@
 // Core
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, Button, StyleSheet, Image } from 'react-native';
 
 // Constants
@@ -22,12 +22,12 @@ const ImageSelector = ({ onImageTaken }) => {
     },
   };
 
-  const takeImageHandler = () => {
+  const takeImageHandler = useCallback(() => {
     ImagePicker.launchCamera(options, (response) => {
       setImageSource(response.uri);
       onImageTaken(response.path);
     })
-  }
+  }, []);
 
   return (
     <View style={styles.imageSelector}>

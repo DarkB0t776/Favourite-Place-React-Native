@@ -59,7 +59,6 @@ const LocationPicker = (props) => {
     navigation.navigate('Map');
   };
 
-  console.log(location);
 
   return (
     <View style={styles.locationPicker}>

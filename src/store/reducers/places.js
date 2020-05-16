@@ -1,4 +1,4 @@
-import { ADD_PLACE, FETCH_PLACES } from '../types';
+import { ADD_PLACE, FETCH_PLACES, DELETE_PLACE } from '../types';
 import Place from '../../models/Place';
 
 const initialState = {
@@ -28,6 +28,10 @@ export default (state = initialState, action) => {
       return {
         places: state.places.concat(newPlace)
       };
+    case DELETE_PLACE:
+      return {
+        places: state.places.filter(pl => pl.id !== action.placeId)
+      }
     default:
       return state;
   }

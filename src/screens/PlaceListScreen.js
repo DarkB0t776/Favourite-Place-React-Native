@@ -45,6 +45,7 @@ const PlaceListScreen = ({ navigation }) => {
       renderItem={({ item }) => {
         return (
           <PlaceItem
+            id={item.id}
             image={item.imageUri}
             title={item.title}
             onSelect={() => navigation.navigate('PlaceDetail', {
