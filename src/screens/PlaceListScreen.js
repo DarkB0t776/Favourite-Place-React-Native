@@ -47,10 +47,14 @@ const PlaceListScreen = ({ navigation }) => {
           <PlaceItem
             image={item.imageUri}
             title={item.title}
-            address={null}
             onSelect={() => navigation.navigate('PlaceDetail', {
               placeTitle: item.title,
-              placeId: item.id.toString()
+              placeId: item.id.toString(),
+              placeImage: item.imageUri,
+              placeCoords: {
+                lat: item.lat,
+                lng: item.lng
+              }
             })}
           />
         )

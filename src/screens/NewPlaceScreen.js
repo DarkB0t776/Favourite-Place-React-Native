@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useLayoutEffect, useState, useCallback } from 'react';
 import {
   StyleSheet,
   Text,
@@ -26,6 +26,7 @@ const NewPlaceScreen = ({ navigation }) => {
 
   const [titleValue, setTitleValue] = useState('');
   const [selectedImage, setSelectedImage] = useState({ imagePath: '' });
+  const [selectedLocation, setSelectedLocation] = useState();
   const dispatch = useDispatch();
 
   const titleChangeHandler = text => {
@@ -33,13 +34,17 @@ const NewPlaceScreen = ({ navigation }) => {
   };
 
   const savePlaceHandler = () => {
-    dispatch(placesActions.addPlace(titleValue, selectedImage));
+    dispatch(placesActions.addPlace(titleValue, selectedImage, selectedLocation));
     navigation.goBack();
   };
 
   const imageTakenHandler = (imagePath) => {
     setSelectedImage({ imagePath });
   }
+
+  const locationPickedHandler = useCallback(location => {
+    setSelectedLocation(location);
+  }, []);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -59,7 +64,9 @@ const NewPlaceScreen = ({ navigation }) => {
         <ImageSelector
           onImageTaken={imageTakenHandler}
         />
-        <LocationPicker />
+        <LocationPicker
+          onLocationPicked={locationPickedHandler}
+        />
         <Button
           title="Save Place"
           color={Colors.primary}

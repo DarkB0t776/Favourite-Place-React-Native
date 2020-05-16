@@ -1,25 +1,29 @@
 // Types
-import { ADD_PLACE, FETCH_PLACES } from '../types';
+import { ADD_PLACE, FETCH_PLACES } from '../types'
 
+// Other
 import { insertPlace, fetchPlaces } from '../../database/db';
 
-export const addPlace = (title, image) => {
+export const addPlace = (title, image, location) => {
 
   return async dispatch => {
     try {
-
-      const result = await insertPlace(title, image.imagePath, 'address', 153.2, 12.5);
+      const result = await insertPlace(title, image.imagePath, location.lat, location.lng);
 
       dispatch({
         type: ADD_PLACE,
         placeData: {
           id: result.insertId,
           title,
-          image: image.imagePath
+          image: image.imagePath,
+          coords: {
+            lat: location.lat,
+            lng: location.lng
+          }
         }
       })
     } catch (e) {
-      console.log(e)
+      throw e
     }
   }
 

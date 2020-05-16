@@ -1,13 +1,24 @@
 // Core
-import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState, useLayoutEffect, useCallback } from 'react';
+import { StyleSheet, Text, TouchableOpacity, Alert } from 'react-native';
 
 // Other
 import MapView, { Marker } from 'react-native-maps';
 
-const MapScreen = () => {
+const MapScreen = ({ navigation }) => {
 
   const [selectedLocation, setSelectedLocation] = useState();
+
+  // Header Options
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity style={styles.headerButton} onPress={saveLocationHandler}>
+          <Text style={styles.saveHeader}>Save</Text>
+        </TouchableOpacity>
+      )
+    });
+  }, [selectedLocation]);
 
   const mapRegion = {
     latitude: 49.233082,
@@ -22,8 +33,20 @@ const MapScreen = () => {
       lng: event.nativeEvent.coordinate.longitude,
     })
 
-    console.log(selectedLocation);
   }
+
+  const saveLocationHandler = useCallback(() => {
+    console.log(selectedLocation);
+    if (!selectedLocation) {
+      Alert.alert('No location selected', 'To save you need to select location', [
+        { text: 'Okay' }
+      ])
+      return;
+    }
+    navigation.navigate('NewPlace', {
+      pickedLocation: selectedLocation
+    });
+  }, [selectedLocation])
 
   let markerCoordinates;
   if (selectedLocation) {
@@ -49,5 +72,12 @@ export default MapScreen;
 const styles = StyleSheet.create({
   map: {
     flex: 1
+  },
+  headerButton: {
+    marginHorizontal: 20,
+  },
+  saveHeader: {
+    fontSize: 16,
+    color: 'white'
   }
 });

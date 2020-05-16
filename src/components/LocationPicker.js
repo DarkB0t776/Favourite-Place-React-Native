@@ -1,7 +1,7 @@
 // Core
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, Button, ActivityIndicator, Alert } from 'react-native'
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 // Constants
 import Colors from '../constants/Colors';
@@ -10,31 +10,41 @@ import MapPreview from '../components/MapPreview';
 // Other
 import * as Location from "expo-location";
 
-const LocationPicker = () => {
+const LocationPicker = (props) => {
 
   const [isFetching, setIsFetching] = useState(false);
-  const [permissions, setPermissions] = useState(false);
   const [location, setLocation] = useState();
   const navigation = useNavigation();
+  const route = useRoute();
+
+  const pickedLocation = route.params?.pickedLocation;
+
+  const { onLocationPicked } = props
+
+  useEffect(() => {
+    if (pickedLocation) {
+      setLocation(pickedLocation);
+      onLocationPicked(pickedLocation);
+    }
+  }, [pickedLocation, onLocationPicked]);
 
   const getLocationHandler = async () => {
 
-    try {
-      let { status } = await Location.requestPermissionsAsync();
-      if (status === 'granted') {
-        setPermissions(true);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-    if (permissions) {
+    let { status } = await Location.requestPermissionsAsync();
+
+    if (status === 'granted') {
       try {
         setIsFetching(true);
-        const loc = await Location.getCurrentPositionAsync({ timeout: 5000 });
+        const loc = await Location.getCurrentPositionAsync({ timeout: 5000, accuracy: Location.Accuracy.High });
         setLocation({
           lat: loc.coords.latitude,
           lng: loc.coords.longitude
         });
+
+        props.onLocationPicked({
+          lat: loc.coords.latitude,
+          lng: loc.coords.longitude
+        })
       } catch (err) {
         console.log(err);
         Alert.alert('Could not get location', 'Pick location on the map instead', [
@@ -49,7 +59,7 @@ const LocationPicker = () => {
     navigation.navigate('Map');
   };
 
-
+  console.log(location);
 
   return (
     <View style={styles.locationPicker}>
